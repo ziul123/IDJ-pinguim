@@ -10,7 +10,7 @@
 
 Game& Game::getInstance(){
 	if (instance == nullptr)
-		instance = new Game();
+		instance = new Game("200023314", 1024, 600);
 	return *instance;
 }
 
@@ -32,7 +32,7 @@ Game::Game(std::string title, int width, int height){
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	error |= renderer == nullptr;
 	if (error) {
-		cout << SDL_GetError() << std::endl;
+		std::cout << SDL_GetError() << std::endl;
 		throw;
 	}
 	

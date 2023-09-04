@@ -8,7 +8,8 @@ State::State(){
 }
 
 void State::loadAssets(){
-
+	bg.open("Recursos/img/ocean.jpg");
+	music.open("Recursos/audio/stageState.ogg");
 }
 
 void State::update(float dt){

@@ -13,9 +13,9 @@ class Sprite{
 		void open(std::string file);
 		void setClip(int x, int y, int w, int h);
 		void render(int x, int y);
-		int getWidth();
-		int getHeight();
-		bool isOpen();
+		int getWidth(){return width;};
+		int getHeight(){return height;};
+		bool isOpen(){return texture != nullptr;};
 
 	private:
 		SDL_Texture* texture;
