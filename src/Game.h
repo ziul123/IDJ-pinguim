@@ -11,12 +11,12 @@ class Game {
 	public:
 		~Game(){};
 		void run();
-		SDL_Renderer* getRenderer();
-		State& getState();
-		Game& getInstance();
+		SDL_Renderer* getRenderer(){return *renderer;};
+		State& getState(){return *state;};
+		static Game& getInstance();
 	
 	private:
-		Game(std::string title, int width, int height){};
+		Game(std::string title, int width, int height);
 		Game* instance;
 		SDL_Window* window;
 		SDL_Renderer* renderer;

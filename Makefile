@@ -1,6 +1,5 @@
 CC = g++-8
-CFLAGS = -std=c++17 -Wall -Wextra -pedantic -Wno-unused-param
-eter -Werror=init-self
+CFLAGS = -std=c++17 -Wall -Wextra -pedantic -Wno-unused-parameter -Werror=init-self
 LIBS = -lm -lSDL2 -lSDL2main -lSDL2_image -lSDL2_mixer -lSDL2_ttf
 
 SRC_DIR=src
@@ -25,7 +24,7 @@ all: setup pinguim
 setup:
 	mkdir -p $(BIN_DIR) $(OBJ_DIR)
 
-pinguim: $(OBJ_DIR)/*.o
+pinguim: $(OBJ_FILES)
 	$(CC) $(CFLAGS) $^ -o $(BIN_DIR)/$@
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
@@ -35,6 +34,6 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 
 .PHONY: clean
 clean:
-	rm -rf $(OBJ_DIR)/*.o $(BIN_DIR)/*
+	rm -rf $(OBJ_DIR)/* $(BIN_DIR)/*
 
 
