@@ -9,15 +9,15 @@
 
 class Game {
 	public:
-		~Game(){};
-		void run();
-		SDL_Renderer* getRenderer(){return *renderer;};
-		State& getState(){return *state;};
-		static Game& getInstance();
+		~Game();
+		void Run();
+		SDL_Renderer* GetRenderer(){return renderer;};
+		State& GetState(){return *state;};
+		static Game& GetInstance();
 	
 	private:
 		Game(std::string title, int width, int height);
-		Game* instance;
+		static Game* instance;
 		SDL_Window* window;
 		SDL_Renderer* renderer;
 		State* state;	

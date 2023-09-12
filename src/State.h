@@ -7,15 +7,15 @@
 class State{
 	public:
 		State();
-		bool quitRequested();
-		void loadAssets();
-		void update(float dt);
-		void render();
+		bool QuitRequested();
+		void LoadAssets();
+		void Update(float dt);
+		void Render();
 
 	private:
 		Sprite bg;
 		Music music;
-		bool quit;
+		bool quitRequested;
 };
 
 #endif

@@ -10,12 +10,12 @@ class Sprite{
 		Sprite();
 		Sprite(std::string file);
 		~Sprite();
-		void open(std::string file);
-		void setClip(int x, int y, int w, int h);
-		void render(int x, int y);
-		int getWidth(){return width;};
-		int getHeight(){return height;};
-		bool isOpen(){return texture != nullptr;};
+		void Open(std::string file);
+		void SetClip(int x, int y, int w, int h);
+		void Render(int x, int y);
+		int GetWidth(){return width;};
+		int GetHeight(){return height;};
+		bool IsOpen(){return texture != nullptr;};
 
 	private:
 		SDL_Texture* texture;

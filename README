@@ -1,0 +1,11 @@
+Trabalho de IDJ - jogo do pinguim
+
+Aluno: Luiz Carlos Vartuli
+Matrícula: 200023314
+
+Como compilar:
+Debug: make DEBUG=1
+Release: make DEBUG=0
+
+Como rodar:
+./bin/pinguim

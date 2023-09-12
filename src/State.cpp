@@ -3,24 +3,25 @@
 #include "State.h"
 
 State::State(){
-	quit = false;
-	loadAssets();
+	quitRequested = false;
+	LoadAssets();
 }
 
-void State::loadAssets(){
-	bg.open("Recursos/img/ocean.jpg");
-	music.open("Recursos/audio/stageState.ogg");
+void State::LoadAssets(){
+	bg.Open("Recursos/img/ocean.jpg");
+	music.Open("Recursos/audio/stageState.ogg");
+	music.Play();
 }
 
-void State::update(float dt){
+void State::Update(float dt){
 	if (SDL_QuitRequested())
-		quit = true;
+		quitRequested = true;
 }
 
-void State::render(){
-	bg.render();
+void State::Render(){
+	bg.Render(0, 0);
 }
 
-bool State::quitRequested(){
-	return quit;
+bool State::QuitRequested(){
+	return quitRequested;
 }

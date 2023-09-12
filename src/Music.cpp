@@ -11,29 +11,29 @@ Music::Music(){
 }
 
 Music::Music(std::string file){
-	open(file);
+	Open(file);
 }
 
-void Music::play(int times = -1){
+void Music::Play(int times){
 	Mix_PlayMusic(music, times);
 }
 
-void Music::stop(int msToStop = 1500){
+void Music::Stop(int msToStop){
 	Mix_FadeOutMusic(msToStop);
 }
 
-void Music::open(std::string file){
+void Music::Open(std::string file){
 	if ((music = Mix_LoadMUS(file.c_str())) == nullptr) {
 		std::cout << SDL_GetError() << std::endl;
-		throw;
+		//throw;
 	}
 }
 
-void Music::isOpen(){
+bool Music::IsOpen(){
 	return music == nullptr;
 }
 
 Music::~Music(){
-	stop();
+	Stop();
 	Mix_FreeMusic(music);
 }
