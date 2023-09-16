@@ -16,6 +16,7 @@ Music::Music(std::string file){
 
 void Music::Play(int times){
 	Mix_PlayMusic(music, times);
+	Mix_VolumeMusic(32);
 }
 
 void Music::Stop(int msToStop){

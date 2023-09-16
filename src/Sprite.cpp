@@ -5,13 +5,13 @@
 
 #include "Sprite.h"
 #include "Game.h"
+#include "GameObject.h"
 
-Sprite::Sprite(){
+Sprite::Sprite(GameObject& associated): Component(associated){
 	texture = nullptr;
 }
 
-Sprite::Sprite(std::string file){
-	texture = nullptr;
+Sprite::Sprite(GameObject& associated, std::string file): Sprite(associated){
 	Open(file);
 }
 
@@ -25,12 +25,13 @@ void Sprite::Open(std::string file){
 		SDL_DestroyTexture(texture);
 
 	texture = IMG_LoadTexture(Game::GetInstance().GetRenderer(), file.c_str());
-	if (texture == nullptr) {
-		std::cout << SDL_GetError() << std::endl;
-		//throw;
-	}
+	if (texture == nullptr)
+		std::cout << "Falha ao abrir arquivo " << file << " em Sprite::Open" << std::endl;
+
 	SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
 	SetClip(0, 0, width, height);
+	associated.box.w = width;
+	associated.box.h = height;
 }
 
 void Sprite::SetClip(int x, int y, int w, int h){
@@ -40,7 +41,9 @@ void Sprite::SetClip(int x, int y, int w, int h){
 	clipRect.h = h;
 }
 
-void Sprite::Render(int x, int y){
+void Sprite::Render(){
+	int x = associated.box.x;
+	int y = associated.box.y;
 	SDL_Renderer *renderer = Game::GetInstance().GetRenderer();
 	SDL_Rect dstrect;
 	dstrect.x = x;
@@ -50,4 +53,6 @@ void Sprite::Render(int x, int y){
 	SDL_RenderCopy(renderer, texture, &clipRect, &dstrect);
 }
 
-
+bool Sprite::Is(std::string type){
+	return type == "Sprite";
+}
