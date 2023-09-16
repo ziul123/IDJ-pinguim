@@ -27,17 +27,17 @@ void State::LoadAssets(){
 
 void State::Update(float dt){
 	Input();
-	for (int i=0;i<objectArray.size();i++){
+	for (int i=0; i < (int) objectArray.size(); i++){
 		objectArray[i]->Update(0.0);
 	}
-	for (int i=0;i<objectArray.size();i++){
+	for (int i=0; i < (int) objectArray.size(); i++){
 		if (objectArray[i]->IsDead())
 			objectArray.erase(objectArray.begin()+i);
 	}
 }
 
 void State::Render(){
-	for (int i = 0; i < objectArray.size(); i++)
+	for (int i = 0; i < (int) objectArray.size(); i++)
 		objectArray[i]->Render();
 }
 
