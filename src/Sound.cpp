@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "Resources.h"
 #include "Sound.h"
 
 
@@ -24,15 +25,12 @@ void Sound::Stop(){
 }
 
 void Sound::Open(std::string file){
-	chunk = Mix_LoadWAV(file.c_str());
-	if (chunk == nullptr)
-		std::cout << "Falha ao abrir arquivo " << file << " em Sound::Open" << std::endl;
+	chunk = Resources::GetSound(file);
 }
 
 Sound::~Sound(){
 	if (chunk != nullptr) {
 		Mix_HaltChannel(channel);
-		Mix_FreeChunk(chunk);
 	}
 }
 

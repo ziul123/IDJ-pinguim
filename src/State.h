@@ -8,7 +8,7 @@
 #include "Sprite.h"
 #include "GameObject.h"
 
-class State{
+class State {
 	public:
 		State();
 		~State();

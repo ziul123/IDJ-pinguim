@@ -10,6 +10,8 @@
 #include "Sound.h"
 #include "Face.h"
 #include "Sprite.h"
+#include "TileMap.h"
+#include "TileSet.h"
 
 State::State(){
 	quitRequested = false;
@@ -23,6 +25,14 @@ void State::LoadAssets(){
 	objectArray.emplace_back(go);
 	music.Open("Recursos/audio/stageState.ogg");
 	music.Play();
+
+	GameObject* go2 = new GameObject();
+	TileSet* ts = new TileSet(64, 64, "Recursos/img/tileset.png");
+	TileMap* tm = new TileMap(*go2, "Recursos/map/tileMap.txt", ts);
+	go2->AddComponent(tm);
+	go2->box.x = 0;
+	go2->box.y = 0;
+	objectArray.emplace_back(go2);
 }
 
 void State::Update(float dt){

@@ -8,7 +8,7 @@
 #include "Game.h"
 #include "State.h"
 
-Game *Game::instance = nullptr;
+Game* Game::instance = nullptr;
 
 Game& Game::GetInstance(){
 	if (instance == nullptr)

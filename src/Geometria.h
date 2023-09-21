@@ -3,7 +3,7 @@
 
 class Vec2;
 
-class Rect{
+class Rect {
 	public:
 		Rect(){x=0;y=0;w=0;h=0;};
 		Rect(float x, float y, float w, float h){this->x=x;this->y=y;this->w=w;this->h=h;};
@@ -16,7 +16,7 @@ class Rect{
 };
 
 
-class Vec2{
+class Vec2 {
 	public:
 		Vec2(){x=0;y=0;};
 		Vec2(float x, float y){this->x=x;this->y=y;};

@@ -8,13 +8,14 @@
 #include "Component.h"
 #include "GameObject.h"
 
-class Sprite: public Component{
+class Sprite: public Component {
 	public:
 		Sprite(GameObject& associated);
 		Sprite(GameObject& associated, std::string file);
 		~Sprite();
 		void Open(std::string file);
 		void SetClip(int x, int y, int w, int h);
+		void Render(float x, float y);
 		void Render() override;
 		int GetWidth(){return width;};
 		int GetHeight(){return height;};

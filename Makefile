@@ -1,8 +1,6 @@
-CC = g++
+CC = g++-8
 CFLAGS = -std=c++17 -Wall -Wextra -pedantic -Wno-unused-parameter -Werror=init-self
-#LIBS = -lm -lSDL2 -lSDL2main -lSDL2_image -lSDL2_mixer -lSDL2_ttf -logg -lvorbis
-#LIBS = -lSDL2 -lSDL2_mixer -lSDL2_image
-LIBS = -I/usr/include/SDL2 -D_REENTRANT -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf
+LIBS = -I/usr/include/SDL2 -D_REENTRANT -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf -lm
 
 SRC_DIR=src
 OBJ_DIR=obj

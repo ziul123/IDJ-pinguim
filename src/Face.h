@@ -6,7 +6,7 @@
 #include "Component.h"
 #include "GameObject.h"
 
-class Face: public Component{
+class Face: public Component {
 	public:
 		Face(GameObject& associated, int hp = 30);
 		void Damage(int damage);

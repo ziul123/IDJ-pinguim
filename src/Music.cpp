@@ -5,6 +5,7 @@
 #include <string>
 
 #include "Music.h"
+#include "Resources.h"
 
 Music::Music(){
 	music = nullptr;
@@ -24,17 +25,13 @@ void Music::Stop(int msToStop){
 }
 
 void Music::Open(std::string file){
-	if ((music = Mix_LoadMUS(file.c_str())) == nullptr) {
-		std::cout << SDL_GetError() << std::endl;
-		//throw;
-	}
+	music = Resources::GetMusic(file);
 }
 
 bool Music::IsOpen(){
-	return music == nullptr;
+	return music != nullptr;
 }
 
 Music::~Music(){
 	Stop();
-	Mix_FreeMusic(music);
 }
