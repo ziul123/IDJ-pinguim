@@ -12,7 +12,7 @@ class State {
 	public:
 		State();
 		~State();
-		bool QuitRequested();
+		bool QuitRequested(){return quitRequested;};
 		void LoadAssets();
 		void Update(float dt);
 		void Render();

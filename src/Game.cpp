@@ -8,6 +8,7 @@
 #include "Game.h"
 #include "State.h"
 #include "Resources.h"
+#include "InputManager.h"
 
 Game* Game::instance = nullptr;
 
@@ -43,6 +44,8 @@ Game::Game(std::string title, int width, int height){
 		std::cout << "Create window/renderer error: " << SDL_GetError() << std::endl;
 	
 	state = new State();
+	dt = 0.0;
+	frameStart = 0;
 }
 
 Game::~Game(){
@@ -59,7 +62,9 @@ Game::~Game(){
 
 void Game::Run(){
 	while (!state->QuitRequested()){
-		state->Update(0.0);
+		CalculateDeltaTime();
+		InputManager::GetInstance().Update();
+		state->Update(dt);
 		state->Render();
 		SDL_RenderPresent(renderer);
 		SDL_Delay(33);
@@ -67,4 +72,10 @@ void Game::Run(){
 	Resources::ClearImages();
 	Resources::ClearMusics();
 	Resources::ClearSounds();
+}
+
+void Game::CalculateDeltaTime(){
+	int32_t ticks = SDL_GetTicks();
+    dt = (float)(ticks - frameStart) / 1000.0f;
+    frameStart = ticks;
 }
