@@ -31,6 +31,6 @@ void Face::Update(float dt){
 	float cX = Camera::pos.x;
 	float cY = Camera::pos.y;
 
-	if (im.MousePress(LEFT_MOUSE_BUTTON && associated.box.Contains(Vec2((float)im.GetMouseX() + cX, (float)im.GetMouseY() + cY))))
+	if (im.MousePress(LEFT_MOUSE_BUTTON) && associated.box.Contains(Vec2((float)im.GetMouseX() + cX, (float)im.GetMouseY() + cY)))
 		Damage(std::rand() % 10 + 10);
 }
