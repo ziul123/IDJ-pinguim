@@ -19,7 +19,10 @@ class GameObject {
 		void AddComponent(Component* cpt);
 		void RemoveComponent(Component* cpt);
 		Component* GetComponent(std::string type);
+		void Start();
 		Rect box;
+		bool started;
+		double angleDeg;
 
 	private:
 		std::vector<std::unique_ptr<Component>> components;

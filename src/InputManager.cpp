@@ -13,11 +13,11 @@ InputManager::InputManager(): mouseState{}, mouseUpdate{}, quitRequested(false),
 
 void InputManager::Update(){
 	SDL_Event event;
+	updateCounter++;
 
 	while (SDL_PollEvent(&event)){
 		SDL_GetMouseState(&mouseX, &mouseY);
 		quitRequested = false;
-		updateCounter++;
 
 		switch (event.type){
 			case SDL_QUIT:

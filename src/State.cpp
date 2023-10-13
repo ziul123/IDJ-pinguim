@@ -14,10 +14,18 @@
 #include "InputManager.h"
 #include "Camera.h"
 #include "CameraFollower.h"
+#include "Alien.h"
 
 State::State(){
 	quitRequested = false;
+	started = false;
+}
+
+void State::Start(){
 	LoadAssets();
+	for (int i = 0; i < (int) objectArray.size(); i++)
+		objectArray[i]->Start();
+	started = true;
 }
 
 void State::LoadAssets(){
@@ -26,7 +34,7 @@ void State::LoadAssets(){
 	go->AddComponent(bg);
 	CameraFollower* cf = new CameraFollower(*go);
 	go->AddComponent(cf);
-	objectArray.emplace_back(go);
+	AddObject(go);
 	music.Open("Recursos/audio/stageState.ogg");
 	music.Play();
 
@@ -36,7 +44,13 @@ void State::LoadAssets(){
 	go2->AddComponent(tm);
 	go2->box.x = 0;
 	go2->box.y = 0;
-	objectArray.emplace_back(go2);
+	AddObject(go2);
+
+	GameObject* go3 = new GameObject();
+	Alien* a = new Alien(*go3, 4);
+	go3->AddComponent(a);
+	go3->box.SetCenter(Vec2(512.0, 300.0));
+	AddObject(go3);
 }
 
 void State::Update(float dt){
@@ -80,4 +94,23 @@ void State::AddObject(int mouseX, int mouseY){
 	Face* face = new Face(*go);
 	go->AddComponent(face);
 	objectArray.emplace_back(go);
+}
+
+std::weak_ptr<GameObject> State::AddObject(GameObject* go){
+	std::shared_ptr<GameObject> p{ go };
+	objectArray.push_back(p);
+	if (started)
+		p->Start();
+
+	std::weak_ptr<GameObject> w(p);
+	return w;
+}
+
+std::weak_ptr<GameObject> State::GetObjectPtr(GameObject* go){
+	std::weak_ptr<GameObject> w;
+	for (int i = 0; i < (int) objectArray.size(); i++){
+		if (objectArray[i].get() == go)
+			w = objectArray[i];
+	}
+	return w;
 }

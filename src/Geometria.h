@@ -12,7 +12,8 @@ class Rect {
 		Vec2 GetCenter();
 		void operator=(Rect const& r){x=r.x;y=r.y;w=r.w;h=r.h;};
 		bool Contains(Vec2 v);
-		
+		void SetCenter(Vec2 v);
+		Rect operator+(Vec2 const& v);
 };
 
 
@@ -29,7 +30,9 @@ class Vec2 {
 		Vec2 Normalizar();
 		float Dist(Vec2 const& v);
 		void operator=(Vec2 const& v){x=v.x;y=v.y;};
+		bool operator==(Vec2 const& v){return x==v.x && y==v.y;};
 		float Incline();
+		float Incline(Vec2 const& v);
 		Vec2 GetRotated(float angle);
 };
 

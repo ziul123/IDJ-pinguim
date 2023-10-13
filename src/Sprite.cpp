@@ -15,6 +15,7 @@ Sprite::Sprite(GameObject& associated): Component(associated){
 
 Sprite::Sprite(GameObject& associated, std::string file): Sprite(associated){
 	Open(file);
+	scale = {1, 1};
 }
 
 Sprite::~Sprite(){
@@ -40,13 +41,26 @@ void Sprite::Render(float x, float y){
 	SDL_Rect dstrect;
 	dstrect.x = x - Camera::pos.x;
 	dstrect.y = y - Camera::pos.y;
-	dstrect.w = clipRect.w;
-	dstrect.h = clipRect.h;
-	SDL_RenderCopy(renderer, texture, &clipRect, &dstrect);
+	dstrect.w = clipRect.w * scale.x;
+	dstrect.h = clipRect.h * scale.y;
+	SDL_RenderCopyEx(renderer, texture, &clipRect, &dstrect, associated.angleDeg, nullptr, SDL_FLIP_NONE);
 }
 
 void Sprite::Render(){
 	Render(associated.box.x, associated.box.y);
+}
+
+void Sprite::SetScaleX(float scaleX, float scaleY){
+	if (scaleX)
+		scale.x = scaleX;
+
+	if (scaleY)
+		scale.y = scaleY;
+
+	Vec2 oldCenter = associated.box.GetCenter();
+	associated.box.w *= scaleX;
+	associated.box.h *= scaleY;
+	associated.box.SetCenter(oldCenter);
 }
 
 bool Sprite::Is(std::string type){

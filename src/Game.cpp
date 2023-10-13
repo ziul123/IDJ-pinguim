@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include <string>
+#include <ctime>
+#include <cstdlib>
 
 #include "Game.h"
 #include "State.h"
@@ -46,6 +48,7 @@ Game::Game(std::string title, int width, int height){
 	state = new State();
 	dt = 0.0;
 	frameStart = 0;
+	srand (static_cast <unsigned> (time(0)));
 }
 
 Game::~Game(){
@@ -61,6 +64,7 @@ Game::~Game(){
 }
 
 void Game::Run(){
+	state->Start();
 	while (!state->QuitRequested()){
 		CalculateDeltaTime();
 		InputManager::GetInstance().Update();
