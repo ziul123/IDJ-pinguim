@@ -1,6 +1,6 @@
 CC = g++-8
 CFLAGS = -std=c++17 -Wall -Wextra -pedantic -Wno-unused-parameter -Werror=init-self
-LIBS = -I/usr/include/SDL2 -D_REENTRANT -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf -lm
+LIBS = `sdl2-config --cflags --libs` -lSDL2_mixer -lSDL2_image -lSDL2_ttf -lm
 
 SRC_DIR=src
 OBJ_DIR=obj
