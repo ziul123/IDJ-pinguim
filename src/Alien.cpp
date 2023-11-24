@@ -14,12 +14,17 @@
 #include "Minion.h"
 #include "Game.h"
 #include "State.h"
+#include "Collider.h"
+#include "Bullet.h"
+#include "Collider.h"
+#include "utils.h"
 
-inline const float PI = acos(-1);
 
 Alien::Alien(GameObject& associated, int nMinions): Component(associated){
 	Sprite* sprite = new Sprite(associated, "Recursos/img/alien.png");
 	associated.AddComponent(sprite);
+	Collider* col = new Collider(associated);
+	associated.AddComponent(col);
 	hp = 30;
 	speed = Vec2(0.0, 0.0);
 	this->nMinions = nMinions;
@@ -84,11 +89,28 @@ void Alien::Update(float dt){
 				break;
 		}
 	}
-
+/*
 	if (hp <= 0)
 		associated.RequestDelete();
-
+*/
 	associated.angleDeg += 0.5;
+}
+
+void Alien::NotifyCollision(GameObject& other){
+	auto bullet = (Bullet*) other.GetComponent("Bullet");
+	if (bullet && !bullet->targetsPlayer){
+		log("Alien collision");
+		log(bullet->targetsPlayer);
+		log(associated.box.x);
+		log(" ");
+		log(associated.box.y);
+		log(" ");
+		log(associated.box.w);
+		log(" ");
+		log(associated.box.h);
+		log(" ");
+		hp -= bullet->GetDamage();
+	}
 }
 
 bool Alien::Is(std::string type){

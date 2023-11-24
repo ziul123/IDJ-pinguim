@@ -1,0 +1,9 @@
+#ifndef UTILS_H
+#define UTILS_H
+#include <iostream>
+
+inline const float PI = acos(-1);
+
+#define log(X) std::cout << (X) << std::endl
+
+#endif

@@ -11,15 +11,18 @@
 #include "Game.h"
 #include "State.h"
 #include "Bullet.h"
+#include "Collider.h"
+#include "utils.h"
 
 #define ROT PI/8
-inline const float PI = acos(-1);
 
 Minion::Minion(GameObject& associated, std::weak_ptr<GameObject> alienCenter, float arcOffsetDeg): Component(associated){
 	Sprite* sprite = new Sprite(associated, "Recursos/img/minion.png");
 	associated.AddComponent(sprite);
+	Collider* col = new Collider(associated);
+	associated.AddComponent(col);
 	float scale = 1.0 + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(1.5-1.0)));
-	sprite->SetScaleX(scale, scale); 
+	sprite->SetScale(scale, scale); 
 	this->alienCenter = alienCenter;
 	arc = arcOffsetDeg;
 }
@@ -41,9 +44,8 @@ void Minion::Shoot(Vec2 pos){
 	GameObject* go = new GameObject();
 	go->box.SetCenter(associated.box.GetCenter());
 	float angle = pos.Incline(associated.box.GetCenter());
-	Bullet* bullet = new Bullet(*go, angle, 200.0, 20, 1000.0 , "Recursos/img/minionbullet1.png");
+	Bullet* bullet = new Bullet(*go, angle, 200.0, 20, 1000.0 , "Recursos/img/minionbullet2.png", 3, 0.3, true);
 	go->AddComponent(bullet);
-	go->angleDeg = angle * 180/PI;
 	Game::GetInstance().GetState().AddObject(go);
 }
 

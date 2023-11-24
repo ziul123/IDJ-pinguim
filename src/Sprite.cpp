@@ -13,9 +13,13 @@ Sprite::Sprite(GameObject& associated): Component(associated){
 	texture = nullptr;
 }
 
-Sprite::Sprite(GameObject& associated, std::string file): Sprite(associated){
-	Open(file);
+Sprite::Sprite(GameObject& associated, std::string file, int fc, float ft): Sprite(associated){
+	frameCount = fc;
+	frameTime = ft;
 	scale = {1, 1};
+	currentFrame = 0;
+	timeElapsed = 0;
+	Open(file);
 }
 
 Sprite::~Sprite(){
@@ -24,8 +28,8 @@ Sprite::~Sprite(){
 void Sprite::Open(std::string file){
 	texture = Resources::GetImage(file);
 	SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
-	SetClip(0, 0, width, height);
-	associated.box.w = width;
+	SetClip(0, 0, width/frameCount, height);
+	associated.box.w = width/frameCount;
 	associated.box.h = height;
 }
 
@@ -50,7 +54,17 @@ void Sprite::Render(){
 	Render(associated.box.x, associated.box.y);
 }
 
-void Sprite::SetScaleX(float scaleX, float scaleY){
+void Sprite::Update(float dt){
+	if ((timeElapsed += dt) > frameTime){
+		int frameWidth = width/frameCount;
+		if (++currentFrame >= frameCount)
+			currentFrame = 0;
+		SetClip(currentFrame * frameWidth, 0, frameWidth, height);
+		timeElapsed = 0;
+	}
+}
+
+void Sprite::SetScale(float scaleX, float scaleY){
 	if (scaleX)
 		scale.x = scaleX;
 
@@ -61,6 +75,21 @@ void Sprite::SetScaleX(float scaleX, float scaleY){
 	associated.box.w *= scaleX;
 	associated.box.h *= scaleY;
 	associated.box.SetCenter(oldCenter);
+}
+
+void Sprite::SetFrame(int frame){
+	currentFrame = frame;
+	int frameWidth = width/frameCount;
+	SetClip(currentFrame * frameWidth, 0, frameWidth, height);
+	timeElapsed = 0;
+}
+
+void Sprite::SetFrameCount(int fc){
+	frameCount = fc;
+	currentFrame = 0;
+	SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
+	associated.box.w = width * scale.x;
+	associated.box.h = height * scale.y;
 }
 
 bool Sprite::Is(std::string type){
