@@ -21,6 +21,7 @@ Bullet::Bullet(GameObject& associated, float angle, float speed, int damage, flo
 	this->speed = Vec2(speed * std::cos(angle), speed * std::sin(angle));
 	associated.angleDeg = angle*180/PI;
 	targetsPlayer = tp;
+	this->damage = damage;
 }
 
 void Bullet::Update(float dt){

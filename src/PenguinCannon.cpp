@@ -37,16 +37,18 @@ void PenguinCannon::Update(float dt){
 	angle = mouse.Incline(center);
 
 	associated.angleDeg = angle*180/PI;
+	cooldown.Update(dt);
 
-    if (input.MousePress(LEFT_MOUSE_BUTTON)) {
+    if (input.MousePress(LEFT_MOUSE_BUTTON) && cooldown.Get() >= 0.5) {
         Shoot();
+		cooldown.Restart();
     }
 
 }
 
 void PenguinCannon::Shoot(){
-	auto go = new GameObject();
-	auto bullet = new Bullet(*go, angle, 200.0, 20, 1000.0, "Recursos/img/minionbullet2.png", 3, 0.3, false);
+	auto* go = new GameObject();
+	auto* bullet = new Bullet(*go, angle, 200.0, 20, 1000.0, "Recursos/img/minionbullet2.png", 3, 0.3, false);
 	go->AddComponent(bullet);
 	
 	Vec2 distanceOffset = Vec2(60, 0).GetRotated(-angle);

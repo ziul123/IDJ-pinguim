@@ -18,6 +18,7 @@ class PenguinBody: public Component{
 		void Render() {};
 		bool Is(std::string type);
 		void NotifyCollision(GameObject& other) override;
+		Vec2 GetPos() {return associated.box.GetCenter();};
 
 		inline static PenguinBody* player = nullptr;
 	

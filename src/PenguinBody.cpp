@@ -13,6 +13,7 @@
 #include "Bullet.h"
 #include "Collider.h"
 #include "Camera.h"
+#include "Sound.h"
 #include "utils.h"
 
 PenguinBody::PenguinBody(GameObject& associated): Component(associated){
@@ -33,7 +34,7 @@ PenguinBody::~PenguinBody(){
 
 void PenguinBody::Start(){
 	auto& state = Game::GetInstance().GetState();
-	auto go = new GameObject();
+	auto* go = new GameObject();
 	go->AddComponent(new PenguinCannon(*go, state.GetObjectPtr(&associated)));
 	pcannon = state.AddObject(go);
 }
@@ -62,11 +63,18 @@ void PenguinBody::Update(float dt){
     associated.box.y += speed.y * dt;
 
     associated.angleDeg = -angle*180/PI;
-
 	if (hp <= 0){
 		Camera::Unfollow();
 		associated.RequestDelete();
 		pcannon.lock()->RequestDelete();
+		auto* go = new GameObject();
+		auto* sprite = new Sprite(*go, "Recursos/img/penguindeath.png", 5, 0.2, 5*0.2);
+		go->AddComponent(sprite);
+		auto* sound = new Sound(*go, "Recursos/audio/boom.wav");
+		sound->Play();
+		go->AddComponent(sound);
+		go->box.SetCenter(associated.box.GetCenter());
+		Game::GetInstance().GetState().AddObject(go);
 	}
 }
 

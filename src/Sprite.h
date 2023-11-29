@@ -8,11 +8,12 @@
 #include "Component.h"
 #include "GameObject.h"
 #include "Geometria.h"
+#include "Timer.h"
 
 class Sprite: public Component {
 	public:
 		Sprite(GameObject& associated);
-		Sprite(GameObject& associated, std::string file, int frameCount = 1, float frameTime = 1);
+		Sprite(GameObject& associated, std::string file, int frameCount = 1, float frameTime = 1, float secsToSelfDestruct = 0);
 		~Sprite();
 
 		void Render() override;
@@ -45,6 +46,8 @@ class Sprite: public Component {
 		int currentFrame;
 		float timeElapsed;
 		float frameTime;
+		Timer selfDestructCount;
+		float secondsToSelfDestruct;
 };
 
 #endif

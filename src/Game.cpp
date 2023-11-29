@@ -11,12 +11,13 @@
 #include "State.h"
 #include "Resources.h"
 #include "InputManager.h"
+#include "utils.h"
 
 Game* Game::instance = nullptr;
 
 Game& Game::GetInstance(){
 	if (instance == nullptr)
-		instance = new Game("200023314", 1024, 600);
+		instance = new Game("200023314", SCREEN_WIDTH, SCREEN_HEIGHT);
 	return *instance;
 }
 

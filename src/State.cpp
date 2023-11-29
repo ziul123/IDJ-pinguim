@@ -55,11 +55,13 @@ void State::LoadAssets(){
 	go3->box.SetCenter(Vec2(512.0, 300.0));
 	AddObject(go3);
 
-	auto go4 = new GameObject();
-	auto p = new PenguinBody(*go4);
+	auto* go4 = new GameObject();
+	auto* p = new PenguinBody(*go4);
 	go4->AddComponent(p);
 	go4->box.SetCenter(Vec2(704, 640));
 	AddObject(go4);
+	Camera::Follow(go4);
+
 }
 
 void State::Update(float dt){
@@ -78,8 +80,8 @@ void State::Update(float dt){
 	}
 	for (int i=0; i < (int) collidables.size() - 1; i++){
 		for (int j=i+1; j < (int) collidables.size(); j++){
-			auto go1 = collidables[i];
-			auto go2 = collidables[j];
+			auto* go1 = collidables[i];
+			auto* go2 = collidables[j];
 			bool r = Collision::IsColliding(((Collider*)go1->GetComponent("Collider"))->box, ((Collider*)go2->GetComponent("Collider"))->box, go1->angleDeg * PI/180, go2->angleDeg * PI/180);
 			if (r){
 				go1->NotifyCollision(*go2);

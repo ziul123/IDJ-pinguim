@@ -13,13 +13,14 @@ Sprite::Sprite(GameObject& associated): Component(associated){
 	texture = nullptr;
 }
 
-Sprite::Sprite(GameObject& associated, std::string file, int fc, float ft): Sprite(associated){
+Sprite::Sprite(GameObject& associated, std::string file, int fc, float ft, float secsToSD): Sprite(associated){
 	frameCount = fc;
 	frameTime = ft;
 	scale = {1, 1};
 	currentFrame = 0;
 	timeElapsed = 0;
 	Open(file);
+	secondsToSelfDestruct = secsToSD;
 }
 
 Sprite::~Sprite(){
@@ -55,6 +56,12 @@ void Sprite::Render(){
 }
 
 void Sprite::Update(float dt){
+	if (secondsToSelfDestruct > 0){
+		selfDestructCount.Update(dt);
+		if (selfDestructCount.Get() >= secondsToSelfDestruct)
+			associated.RequestDelete();
+	}
+
 	if ((timeElapsed += dt) > frameTime){
 		int frameWidth = width/frameCount;
 		if (++currentFrame >= frameCount)
