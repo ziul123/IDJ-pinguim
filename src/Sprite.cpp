@@ -28,7 +28,7 @@ Sprite::~Sprite(){
 
 void Sprite::Open(std::string file){
 	texture = Resources::GetImage(file);
-	SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
+	SDL_QueryTexture(texture.get(), nullptr, nullptr, &width, &height);
 	SetClip(0, 0, width/frameCount, height);
 	associated.box.w = width/frameCount;
 	associated.box.h = height;
@@ -48,7 +48,7 @@ void Sprite::Render(float x, float y){
 	dstrect.y = y - Camera::pos.y;
 	dstrect.w = clipRect.w * scale.x;
 	dstrect.h = clipRect.h * scale.y;
-	SDL_RenderCopyEx(renderer, texture, &clipRect, &dstrect, associated.angleDeg, nullptr, SDL_FLIP_NONE);
+	SDL_RenderCopyEx(renderer, texture.get(), &clipRect, &dstrect, associated.angleDeg, nullptr, SDL_FLIP_NONE);
 }
 
 void Sprite::Render(){
@@ -94,7 +94,7 @@ void Sprite::SetFrame(int frame){
 void Sprite::SetFrameCount(int fc){
 	frameCount = fc;
 	currentFrame = 0;
-	SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
+	SDL_QueryTexture(texture.get(), nullptr, nullptr, &width, &height);
 	associated.box.w = width * scale.x;
 	associated.box.h = height * scale.y;
 }

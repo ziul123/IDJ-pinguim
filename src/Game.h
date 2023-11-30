@@ -4,16 +4,23 @@
 #include "SDL2/SDL.h"
 
 #include <string>
+#include <stack>
+#include <memory>
 
 #include "State.h"
 
 class Game {
 	public:
 		~Game();
-		void Run();
+
 		SDL_Renderer* GetRenderer(){return renderer;};
-		State& GetState(){return *state;};
+		State& GetCurrentState();
 		static Game& GetInstance();
+
+		void Push(State* state);
+
+		void Run();
+
 		float GetDeltaTime(){return dt;};
 	
 	private:
@@ -22,7 +29,8 @@ class Game {
 		static Game* instance;
 		SDL_Window* window;
 		SDL_Renderer* renderer;
-		State* state;	
+		State* storedState;
+		std::stack<std::unique_ptr<State>> stateStack;	
 		int frameStart;
 		float dt;
 

@@ -46,13 +46,23 @@ Game::Game(std::string title, int width, int height){
 	if (window == nullptr || renderer == nullptr)
 		std::cout << "Create window/renderer error: " << SDL_GetError() << std::endl;
 	
-	state = new State();
+	storedState = nullptr;
 	dt = 0.0;
 	frameStart = 0;
 	srand (static_cast <unsigned> (time(0)));
 }
 
 Game::~Game(){
+	if (storedState)
+		delete storedState;
+
+	while (!stateStack.empty())
+		stateStack.pop();
+
+	Resources::ClearImages();
+	Resources::ClearMusics();
+	Resources::ClearSounds();
+
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 
@@ -64,19 +74,43 @@ Game::~Game(){
 	SDL_Quit();
 }
 
+State& Game::GetCurrentState(){
+	return *stateStack.top();
+}
+
+void Game::Push(State* state){
+	storedState = state;
+}
+
 void Game::Run(){
-	state->Start();
-	while (!state->QuitRequested()){
+	if (!storedState) {
+		log("Error: No initial state!");
+		throw;
+	}
+
+	stateStack.emplace(storedState);
+	storedState = nullptr;
+
+	while (!stateStack.empty() && !GetCurrentState().QuitRequested()){
+		if (stateStack.top()->PopRequested()){
+			stateStack.pop();
+			stateStack.top()->Resume();
+		}
+
+		if (storedState){
+			stateStack.top()->Pause();
+			stateStack.emplace(storedState);
+			stateStack.top()->Start();
+			storedState = nullptr;
+		}
+
 		CalculateDeltaTime();
 		InputManager::GetInstance().Update();
-		state->Update(dt);
-		state->Render();
+		stateStack.top()->Update(dt);
+		stateStack.top()->Render();
 		SDL_RenderPresent(renderer);
 		SDL_Delay(33);
 	}
-	Resources::ClearImages();
-	Resources::ClearMusics();
-	Resources::ClearSounds();
 }
 
 void Game::CalculateDeltaTime(){

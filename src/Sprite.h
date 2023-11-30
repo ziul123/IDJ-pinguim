@@ -4,6 +4,7 @@
 #include "SDL2/SDL.h"
 
 #include <string>
+#include <memory>
 
 #include "Component.h"
 #include "GameObject.h"
@@ -37,7 +38,7 @@ class Sprite: public Component {
 		void SetFrameTime(float ft) {frameTime = ft;};
 
 	private:
-		SDL_Texture* texture;
+		std::shared_ptr<SDL_Texture> texture;
 		int width;
 		int height;
 		SDL_Rect clipRect;

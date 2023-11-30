@@ -1,32 +1,39 @@
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
 #include "SDL2/SDL_mixer.h"
+#include "SDL2/SDL_render.h"
 
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include <memory>
 
 #include "Game.h"
 #include "Resources.h"
 
 
-SDL_Texture* Resources::GetImage(std::string file){
-	SDL_Texture* texture;
-	if (Resources::imageTable.find(file) == Resources::imageTable.end()){
-		texture = IMG_LoadTexture(Game::GetInstance().GetRenderer(), file.c_str());
+std::shared_ptr<SDL_Texture> Resources::GetImage(std::string file){
+	auto it = Resources::imageTable.find(file);
+	if (it == Resources::imageTable.end()){
+		auto texture = IMG_LoadTexture(Game::GetInstance().GetRenderer(), file.c_str());
 		if (texture == nullptr)
 			std::cout << "Falha ao abrir arquivo " << file << " em Resources::GetImage" << std::endl;
-		Resources::imageTable[file] = texture;
-	} else {
-		texture = Resources::imageTable[file];
+		auto sp = std::shared_ptr<SDL_Texture>(texture, sdl_deleter());
+		it = Resources::imageTable.insert({file, sp}).first;
 	}
-	return texture;
+	return it->second;
 }
 
 void Resources::ClearImages(){
-	for (const auto& kv: Resources::imageTable)
-		SDL_DestroyTexture(kv.second);
-	Resources::imageTable.clear();
+	std::vector<std::string> keysToDelete;
+    for (auto& [file, image] : imageTable) {
+        if (image.unique()) {
+            keysToDelete.push_back(file);
+        }
+    }
+    for (auto& file : keysToDelete) {
+        imageTable.erase(file);
+    }
 }
 
 Mix_Music* Resources::GetMusic(std::string file){

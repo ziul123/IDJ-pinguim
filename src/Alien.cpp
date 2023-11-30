@@ -36,7 +36,7 @@ Alien::Alien(GameObject& associated, int nMinions): Component(associated){
 }
 
 void Alien::Start(){
-	State& s = Game::GetInstance().GetState();
+	State& s = Game::GetInstance().GetCurrentState();
 	auto alien = s.GetObjectPtr(&associated);
 
 	for (int i=0; i < nMinions; i++){
@@ -96,7 +96,8 @@ void Alien::Update(float dt){
 		sound->Play();
 		go->AddComponent(sound);
 		go->box.SetCenter(associated.box.GetCenter());
-		Game::GetInstance().GetState().AddObject(go);
+		go->angleDeg = associated.angleDeg;
+		Game::GetInstance().GetCurrentState().AddObject(go);
 	}
 	associated.angleDeg += 0.5;
 }

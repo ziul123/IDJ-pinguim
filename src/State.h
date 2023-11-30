@@ -4,30 +4,38 @@
 #include <memory>
 #include <vector>
 
-#include "Music.h"
-#include "Sprite.h"
 #include "GameObject.h"
 
 class State {
 	public:
 		State();
-		~State();
-		bool QuitRequested(){return quitRequested;};
-		void LoadAssets();
-		void Update(float dt);
-		void Render();
-		void Start();
-		std::weak_ptr<GameObject> AddObject(GameObject* go);
-		std::weak_ptr<GameObject> GetObjectPtr(GameObject* go);
+		virtual ~State();
 
-	private:
-		void Input();
-		void AddObject(int mouseX, int mouseY);
-		Music music;
+		virtual void LoadAssets() {};
+		virtual void Update(float dt) = 0;
+		virtual void Render() = 0;
+
+		virtual void Start() {};
+		virtual void Pause() {};
+		virtual void Resume() {};
+
+		virtual std::weak_ptr<GameObject> AddObject(GameObject* obj);
+		virtual std::weak_ptr<GameObject> GetObjectPtr(GameObject* obj);
+
+		bool PopRequested() {return popRequested;};
+		bool QuitRequested() {return quitRequested;};
+
+	protected:
+		virtual void StartArray();
+		virtual void UpdateArray(float dt);
+		virtual void RenderArray();
+
+		bool popRequested;
 		bool quitRequested;
-		std::vector<std::shared_ptr<GameObject>> objectArray;
 		bool started;
-		
+
+		std::vector<std::shared_ptr<GameObject>> objectArray;
+
 };
 
 #endif

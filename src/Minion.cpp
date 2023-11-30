@@ -27,6 +27,17 @@ Minion::Minion(GameObject& associated, std::weak_ptr<GameObject> alienCenter, fl
 	arc = arcOffsetDeg;
 }
 
+Minion::~Minion(){
+	/*
+	auto* go = new GameObject();
+	go->angleDeg = associated.angleDeg;
+	auto* sprite = new Sprite(*go, "Recursos/img/miniondeath.png", 4, 0.2, 4*0.2);
+	go->box.SetCenter(associated.box.GetCenter());
+	go->AddComponent(sprite);
+	Game::GetInstance().GetCurrentState().AddObject(go);
+	*/
+}
+
 void Minion::Update(float dt){
 	Vec2 inicial {120, 0};
 	arc += ROT * dt;
@@ -46,9 +57,10 @@ void Minion::Shoot(Vec2 pos){
 	float angle = pos.Incline(associated.box.GetCenter());
 	Bullet* bullet = new Bullet(*go, angle, 200.0, 20, 1000.0 , "Recursos/img/minionbullet2.png", 3, 0.3, true);
 	go->AddComponent(bullet);
-	Game::GetInstance().GetState().AddObject(go);
+	Game::GetInstance().GetCurrentState().AddObject(go);
 }
 
 bool Minion::Is(std::string type){
 	return type == "Minion";
 }
+

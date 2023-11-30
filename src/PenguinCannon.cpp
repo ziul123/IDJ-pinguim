@@ -54,7 +54,7 @@ void PenguinCannon::Shoot(){
 	Vec2 distanceOffset = Vec2(60, 0).GetRotated(-angle);
     go->box.SetCenter(associated.box.GetCenter() + distanceOffset);
 
-	Game::GetInstance().GetState().AddObject(go);
+	Game::GetInstance().GetCurrentState().AddObject(go);
 }
 
 bool PenguinCannon::Is(std::string type){
