@@ -4,6 +4,7 @@
 #include "SDL2/SDL_mixer.h"
 
 #include <string>
+#include <memory>
 
 #include "Component.h"
 #include "GameObject.h"
@@ -23,7 +24,7 @@ class Sound: public Component {
 		bool IsPlaying();
 
 	private:
-		Mix_Chunk* chunk;
+		std::shared_ptr<Mix_Chunk> chunk;
 		int channel;
 };
 

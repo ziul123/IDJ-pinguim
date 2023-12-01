@@ -7,6 +7,7 @@
 #include <vector>
 #include <iostream>
 #include <ctime>
+#include <random>
 
 #include "Component.h"
 #include "GameObject.h"
@@ -23,6 +24,7 @@ class Alien: public Component {
 		bool Is(std::string type) override;
 		void NotifyCollision(GameObject& other) override;
 		static int alienCount;
+		int GetHp() {return hp;};
 
 	private:
 		Vec2 speed;
@@ -33,6 +35,9 @@ class Alien: public Component {
 		AlienState state;
 		Timer restTimer;
 		Vec2 destination;
+		float timeOffset;
+		std::uniform_real_distribution<> rng;
+		std::mt19937 gen;
 
 };
 

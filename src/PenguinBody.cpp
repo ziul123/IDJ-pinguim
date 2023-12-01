@@ -59,8 +59,10 @@ void PenguinBody::Update(float dt){
 
 	speed = Vec2(linearSpeed, 0).GetRotated(angle);
 
-    associated.box.x += speed.x * dt;
-    associated.box.y += speed.y * dt;
+    auto nX = std::min(associated.box.x + speed.x * dt, 1320.0f);
+    auto nY = std::min(associated.box.y + speed.y * dt, 1220.0f);
+	associated.box.x = std::max(nX, 0.0f);
+	associated.box.y = std::max(nY, -10.0f);
 
     associated.angleDeg = -angle*180/PI;
 	if (hp <= 0){

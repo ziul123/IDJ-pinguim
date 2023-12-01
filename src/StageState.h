@@ -9,6 +9,7 @@
 #include "GameObject.h"
 #include "TileSet.h"
 #include "State.h"
+#include "Timer.h"
 
 class StageState: public State {
 	public:
@@ -17,15 +18,17 @@ class StageState: public State {
 
 		void LoadAssets();
 		void Update(float dt);
-		void Render();
 
 		void Start();
 		void Pause() {};
 		void Resume() {};
 
 	private:
+		void AddAlien(float x, float y, int minions);
 		TileSet* tileSet;
 		Music bgm;
+		Timer endTimer;
+		bool ended;
 		
 };
 

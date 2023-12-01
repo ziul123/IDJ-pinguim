@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 #include <cstdlib>
+#include <random>
 
 #include "Alien.h"
 #include "Camera.h"
@@ -24,7 +25,7 @@
 int Alien::alienCount = 0;
 
 
-Alien::Alien(GameObject& associated, int nMinions): Component(associated){
+Alien::Alien(GameObject& associated, int nMinions): Component(associated), rng(0.5, 2.0){
 	Sprite* sprite = new Sprite(associated, "Recursos/img/alien.png");
 	associated.AddComponent(sprite);
 	Collider* col = new Collider(associated);
@@ -47,6 +48,10 @@ void Alien::Start(){
 	}
 	state = RESTING;
 	restTimer.Restart();
+	std::random_device rd;
+	std::mt19937 tmp(rd());
+    gen = tmp;
+	timeOffset = rng(gen);
 }
 
 Alien::~Alien(){
@@ -62,10 +67,11 @@ void Alien::Update(float dt){
 		switch (state){
 			case RESTING:
 				restTimer.Update(dt);
-				if (restTimer.Get() >= 3){
+				if (restTimer.Get() >= 2 + timeOffset){
 					Vec2 p = PenguinBody::player->GetPos();
 					destination = p;
 					state = MOVING;
+					timeOffset = rng(gen);
 				}
 				break;
 			case MOVING:

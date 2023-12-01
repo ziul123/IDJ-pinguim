@@ -15,12 +15,12 @@ Sound::Sound(GameObject& associated, std::string file): Sound(associated){
 }
 
 void Sound::Play(int times){
-	channel = Mix_PlayChannel(-1, chunk, times-1);
-	Mix_VolumeChunk(chunk, 32);
+	channel = Mix_PlayChannel(-1, chunk.get(), times-1);
+	Mix_VolumeChunk(chunk.get(), 32);
 }
 
 void Sound::Stop(){
-	if (chunk != nullptr)
+	if (chunk)
 		Mix_HaltChannel(channel);
 }
 
@@ -29,7 +29,7 @@ void Sound::Open(std::string file){
 }
 
 Sound::~Sound(){
-	if (chunk != nullptr) {
+	if (chunk) {
 		Mix_HaltChannel(channel);
 	}
 }

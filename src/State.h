@@ -13,7 +13,7 @@ class State {
 
 		virtual void LoadAssets() {};
 		virtual void Update(float dt) = 0;
-		virtual void Render() = 0;
+		virtual void Render() {RenderArray();};
 
 		virtual void Start() {};
 		virtual void Pause() {};

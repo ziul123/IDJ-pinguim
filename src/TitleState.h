@@ -8,8 +8,9 @@ class TitleState: public State {
 		TitleState();
 		~TitleState() {};
 
+		void LoadAssets();
 		void Update(float dt);
-		void Render();
+		void Start();
 
 };
 

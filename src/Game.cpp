@@ -1,6 +1,7 @@
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
 #include "SDL2/SDL_mixer.h"
+#include "SDL2/SDL_ttf.h"
 
 #include <iostream>
 #include <string>
@@ -41,6 +42,9 @@ Game::Game(std::string title, int width, int height){
 
 	Mix_AllocateChannels(32);
 
+	if(TTF_Init() != 0)
+		std::cout << "TTF_Init error: " << SDL_GetError() << std::endl;
+
 	window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, 0);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	if (window == nullptr || renderer == nullptr)
@@ -59,12 +63,12 @@ Game::~Game(){
 	while (!stateStack.empty())
 		stateStack.pop();
 
-	Resources::ClearImages();
-	Resources::ClearMusics();
-	Resources::ClearSounds();
+	Resources::ClearAll();
 
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
+
+	TTF_Quit();
 
 	Mix_CloseAudio();
 	Mix_Quit();
@@ -90,15 +94,19 @@ void Game::Run(){
 
 	stateStack.emplace(storedState);
 	storedState = nullptr;
+	stateStack.top()->Start();
 
 	while (!stateStack.empty() && !GetCurrentState().QuitRequested()){
 		if (stateStack.top()->PopRequested()){
 			stateStack.pop();
-			stateStack.top()->Resume();
+			Resources::ClearAll();
+			if (!stateStack.empty())
+				stateStack.top()->Resume();
 		}
 
 		if (storedState){
-			stateStack.top()->Pause();
+			if (!stateStack.empty())
+				stateStack.top()->Pause();
 			stateStack.emplace(storedState);
 			stateStack.top()->Start();
 			storedState = nullptr;

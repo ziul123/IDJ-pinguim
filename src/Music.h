@@ -4,6 +4,7 @@
 #include "SDL2/SDL_mixer.h"
 
 #include <string>
+#include <memory>
 
 class Music {
 	public:
@@ -16,7 +17,7 @@ class Music {
 		bool IsOpen();
 
 	private:
-		Mix_Music* music;
+		std::shared_ptr<Mix_Music> music;
 };
 
 #endif

@@ -10,6 +10,7 @@
 
 #include "Game.h"
 #include "Resources.h"
+#include "utils.h"
 
 
 std::shared_ptr<SDL_Texture> Resources::GetImage(std::string file){
@@ -36,39 +37,82 @@ void Resources::ClearImages(){
     }
 }
 
-Mix_Music* Resources::GetMusic(std::string file){
-	Mix_Music* music;
-	if (Resources::musicTable.find(file) == Resources::musicTable.end()){
-		music = Mix_LoadMUS(file.c_str());
+std::shared_ptr<Mix_Music> Resources::GetMusic(std::string file){
+	auto it = musicTable.find(file);
+	if (it == musicTable.end()){
+		auto music = Mix_LoadMUS(file.c_str());
 		if (music == nullptr)
 			std::cout << "Falha ao abrir arquivo " << file << " em Resources::GetMusic" << std::endl;
-		Resources::musicTable[file] = music;
-	} else {
-		music = Resources::musicTable[file];
+		auto sp = std::shared_ptr<Mix_Music>(music, sdl_deleter());
+		it = musicTable.insert({file, sp}).first;
 	}
-	return music;
+	return it->second;
 }
 
 void Resources::ClearMusics(){
-	for (const auto& kv: Resources::musicTable)
-		Mix_FreeMusic(kv.second);
-	Resources::musicTable.clear();
+	std::vector<std::string> keysToDelete;
+    for (auto& [file, music] : musicTable) {
+        if (music.unique()) {
+            keysToDelete.push_back(file);
+        }
+    }
+    for (auto& file : keysToDelete) {
+        musicTable.erase(file);
+    }
 }
 
-Mix_Chunk* Resources::GetSound(std::string file){
-	Mix_Chunk* chunk;
-	if (Resources::soundTable.find(file) == Resources::soundTable.end()){
-		chunk = Mix_LoadWAV(file.c_str());
+std::shared_ptr<Mix_Chunk> Resources::GetSound(std::string file){
+	auto it = soundTable.find(file);
+	if (it == soundTable.end()){
+		auto chunk = Mix_LoadWAV(file.c_str());
 		if (chunk == nullptr)
 			std::cout << "Falha ao abrir arquivo " << file << " em Resources::GetSound" << std::endl;
-	} else {
-		chunk = Resources::soundTable[file];
+		auto sp = std::shared_ptr<Mix_Chunk>(chunk, sdl_deleter());
+		it = soundTable.insert({file, sp}).first;
 	}
-	return chunk;
+	return it->second;
 }
 
 void Resources::ClearSounds(){
-	for (const auto& kv: Resources::soundTable)
-		Mix_FreeChunk(kv.second);
-	Resources::soundTable.clear();
+	std::vector<std::string> keysToDelete;
+    for (auto& [file, chunk] : soundTable) {
+        if (chunk.unique()) {
+            keysToDelete.push_back(file);
+        }
+    }
+    for (auto& file : keysToDelete) {
+        soundTable.erase(file);
+    }
+}
+
+std::shared_ptr<TTF_Font> Resources::GetFont(std::string file, int fontSize){
+	auto key = file + std::to_string(fontSize);
+	auto it = fontTable.find(key);
+	if (it == fontTable.end()){
+		auto font = TTF_OpenFont(file.c_str(), fontSize);
+		if (font == nullptr)
+			std::cout << "Falha ao abrir arquivo " << file << " em Resources::GetFont" << std::endl;
+		auto sp = std::shared_ptr<TTF_Font>(font, sdl_deleter());
+		it = fontTable.insert({key, sp}).first;
+	}
+	return it->second;
+}
+
+void Resources::ClearFonts(){
+	std::vector<std::string> keysToDelete;
+    for (auto& [file, font] : fontTable) {
+        if (font.unique()) {
+            keysToDelete.push_back(file);
+        }
+    }
+    for (auto& file : keysToDelete) {
+        fontTable.erase(file);
+    }
+}
+
+void Resources::ClearAll(){
+	ClearImages();
+	ClearSounds();
+	ClearMusics();
+	ClearFonts();
 }

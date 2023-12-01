@@ -12,6 +12,7 @@
 #include "State.h"
 #include "Bullet.h"
 #include "Collider.h"
+#include "Alien.h"
 #include "utils.h"
 
 #define ROT PI/8
@@ -28,14 +29,6 @@ Minion::Minion(GameObject& associated, std::weak_ptr<GameObject> alienCenter, fl
 }
 
 Minion::~Minion(){
-	/*
-	auto* go = new GameObject();
-	go->angleDeg = associated.angleDeg;
-	auto* sprite = new Sprite(*go, "Recursos/img/miniondeath.png", 4, 0.2, 4*0.2);
-	go->box.SetCenter(associated.box.GetCenter());
-	go->AddComponent(sprite);
-	Game::GetInstance().GetCurrentState().AddObject(go);
-	*/
 }
 
 void Minion::Update(float dt){
@@ -49,6 +42,15 @@ void Minion::Update(float dt){
 	associated.box.SetCenter(inicial.GetRotated(arc) + center);
 
 	associated.angleDeg = associated.box.GetCenter().Incline(center) * 180/PI - 90;
+
+	if (((Alien*)(alienCenter.lock()->GetComponent("Alien")))->GetHp() <= 0){
+		auto* go = new GameObject();
+		go->angleDeg = associated.angleDeg;
+		auto* sprite = new Sprite(*go, "Recursos/img/miniondeath.png", 4, 0.2, 4*0.2);
+		go->box.SetCenter(associated.box.GetCenter());
+		go->AddComponent(sprite);
+		Game::GetInstance().GetCurrentState().AddObject(go);
+	}
 }
 
 void Minion::Shoot(Vec2 pos){

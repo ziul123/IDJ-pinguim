@@ -5,9 +5,11 @@
 #include "GameObject.h"
 #include "Component.h"
 
-GameObject::GameObject(){
+GameObject::GameObject(bool r){
 	isDead = false;
 	started = false;
+	render = r;
+	angleDeg = 0;
 }
 
 GameObject::~GameObject(){
@@ -26,6 +28,8 @@ void GameObject::Update(float dt){
 }
 
 void GameObject::Render(){
+	if (!render)
+		return;
 	for (int i = 0; i < (int) components.size(); i++)
 		components[i]->Render();
 }
@@ -59,4 +63,8 @@ Component* GameObject::GetComponent(std::string type){
 void GameObject::NotifyCollision(GameObject& other){
 	for (int i = 0; i < (int) components.size(); i++)
 		components[i]->NotifyCollision(other);
+}
+
+void GameObject::SetRender(bool r){
+	render = r;
 }

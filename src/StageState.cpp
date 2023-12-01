@@ -17,6 +17,10 @@
 #include "PenguinBody.h"
 #include "Collision.cpp"
 #include "Collider.h"
+#include "GameData.h"
+#include "Game.h"
+#include "EndState.h"
+#include "TitleState.h"
 #include "utils.h"
 
 StageState::StageState(): State(){}
@@ -25,6 +29,7 @@ void StageState::Start(){
 	LoadAssets();
 	StartArray();
 	started = true;
+	ended = false;
 }
 
 void StageState::LoadAssets(){
@@ -45,12 +50,6 @@ void StageState::LoadAssets(){
 	go2->box.y = 0;
 	AddObject(go2);
 
-	GameObject* go3 = new GameObject();
-	Alien* a = new Alien(*go3, 4);
-	go3->AddComponent(a);
-	go3->box.SetCenter(Vec2(512.0, 300.0));
-	AddObject(go3);
-
 	auto* go4 = new GameObject();
 	auto* p = new PenguinBody(*go4);
 	go4->AddComponent(p);
@@ -58,12 +57,17 @@ void StageState::LoadAssets(){
 	AddObject(go4);
 	Camera::Follow(go4);
 
+	AddAlien(100, 200, 3);
+	AddAlien(1000, 600, 2);
+	AddAlien(500, 300, 4);
 }
 
 void StageState::Update(float dt){
 	InputManager& im = InputManager::GetInstance();
-	if (im.KeyPress(ESCAPE_KEY) || im.QuitRequested())
+	if (im.KeyPress(ESCAPE_KEY) || im.QuitRequested()){
+		Game::GetInstance().Push(new TitleState());
 		popRequested = true;
+	}
 
 	std::vector<GameObject*> collidables;
 
@@ -91,9 +95,31 @@ void StageState::Update(float dt){
 		if (objectArray[i]->IsDead())
 			objectArray.erase(objectArray.begin()+i);
 	}
+
+	if (Alien::alienCount == 0 && !ended){
+		GameData::playerVictory = true;
+		ended = true;
+		endTimer.Restart();
+	}
+
+	if (!PenguinBody::player && !ended){
+		GameData::playerVictory = false;
+		ended = true;
+		endTimer.Restart();
+	}
+
+	if (ended && endTimer.Get() >= 2){
+		popRequested = true;
+		Game::GetInstance().Push(new EndState());
+	}
+
+	endTimer.Update(dt);
 }
 
-void StageState::Render(){
-	RenderArray();
+void StageState::AddAlien(float x, float y, int minions){
+	GameObject* go = new GameObject();
+	Alien* a = new Alien(*go, minions);
+	go->AddComponent(a);
+	go->box.SetCenter(Vec2(x, y));
+	AddObject(go);
 }
-
